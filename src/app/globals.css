@@ -1,0 +1,196 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-display: "Anton";
+  --font-body: "Archivo";
+  --font-mono: "IBM Plex Mono";
+  color-scheme: dark;
+}
+
+html,
+body {
+  background: #0a0a0c;
+  color: #f1ebdd;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+}
+
+/* A faint TV glow from the top of the screen, plus a soft vignette. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(1200px 520px at 70% -10%, rgba(255, 106, 26, 0.13), transparent 70%),
+    radial-gradient(900px 480px at 0% 0%, rgba(77, 107, 255, 0.08), transparent 70%),
+    radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.55) 100%);
+}
+
+/* CRT scanlines + film grain over everything, very subtle. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 60;
+  opacity: 0.6;
+  background:
+    repeating-linear-gradient(180deg, rgba(0, 0, 0, 0) 0 2px, rgba(0, 0, 0, 0.16) 2px 3px),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.09'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+}
+
+/* SMPTE-style color bars, used as a thin brand strip and inside the hero TV. */
+.bars {
+  background: linear-gradient(
+    90deg,
+    #c9c9c9 0 14.28%,
+    #ffc23d 14.28% 28.57%,
+    #3fd6d6 28.57% 42.85%,
+    #3ddc97 42.85% 57.14%,
+    #e64fd0 57.14% 71.42%,
+    #ff5470 71.42% 85.71%,
+    #4d6bff 85.71% 100%
+  );
+}
+.bars-low {
+  background: linear-gradient(
+    90deg,
+    #4d6bff 0 14.28%,
+    #111 14.28% 28.57%,
+    #e64fd0 28.57% 42.85%,
+    #111 42.85% 57.14%,
+    #3fd6d6 57.14% 71.42%,
+    #111 71.42% 85.71%,
+    #c9c9c9 85.71% 100%
+  );
+}
+
+/* Hero TV: curved glass, scanlines that roll, and a VHS tracking band. */
+.crt {
+  position: relative;
+  overflow: hidden;
+  border-radius: 28px / 22px;
+  box-shadow:
+    inset 0 0 0 2px rgba(255, 255, 255, 0.05),
+    inset 0 0 80px rgba(0, 0, 0, 0.85),
+    0 30px 80px -30px rgba(255, 106, 26, 0.45);
+}
+.crt::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(180deg, rgba(0, 0, 0, 0) 0 2px, rgba(0, 0, 0, 0.28) 2px 4px),
+    radial-gradient(ellipse at center, rgba(255, 255, 255, 0.08), transparent 60%);
+}
+.tracking {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 18%;
+  top: -20%;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.18) 45%, rgba(255, 255, 255, 0.05) 55%, transparent);
+  filter: blur(1px);
+  animation: tracking 6.5s linear infinite;
+  mix-blend-mode: screen;
+}
+@keyframes tracking {
+  0% { top: -20%; }
+  60%, 100% { top: 110%; }
+}
+.flicker {
+  animation: flicker 4s steps(1) infinite;
+}
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  41% { opacity: 0.86; }
+  42% { opacity: 1; }
+  77% { opacity: 0.92; }
+  78% { opacity: 1; }
+}
+.jitter {
+  animation: jitter 5s steps(1) infinite;
+}
+@keyframes jitter {
+  0%, 100% { transform: translate(0, 0); }
+  62% { transform: translate(-2px, 0); }
+  63% { transform: translate(2px, 0); }
+  64% { transform: translate(0, 0); }
+}
+
+.grad-text {
+  background: linear-gradient(95deg, #ff6a1a 0%, #ff8f3d 45%, #ffc23d 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* RGB-split headline, like a slightly misaligned tape. */
+.rgb-split {
+  text-shadow:
+    -2px 0 rgba(77, 107, 255, 0.55),
+    2px 0 rgba(255, 84, 112, 0.45);
+}
+
+@layer components {
+  .panel {
+    @apply rounded-md border border-line bg-panel/90 shadow-[0_24px_60px_-34px_rgba(0,0,0,.9)];
+  }
+  .label {
+    @apply font-mono text-[11px] uppercase tracking-[0.14em] text-muted;
+  }
+  .num {
+    @apply font-mono tabular-nums;
+  }
+  .ch {
+    @apply inline-grid place-items-center rounded-[4px] border border-line-strong bg-ink-2 font-mono text-[11px] font-semibold tabular-nums tracking-wider text-bone-dim;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-semibold uppercase tracking-[0.06em] transition
+      focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pulse
+      disabled:cursor-not-allowed disabled:opacity-45;
+  }
+  .btn-pulse {
+    @apply btn bg-pulse text-pulse-ink shadow-[0_0_0_1px_rgba(255,106,26,.5),0_10px_28px_-10px_rgba(255,106,26,.75)] hover:bg-[#FF7C33];
+  }
+  .btn-ghost {
+    @apply btn border border-line-strong bg-ink-2/70 text-bone hover:border-bone/40 hover:bg-panel-2;
+  }
+  .btn-ember {
+    @apply btn bg-ember text-[#231600] shadow-[0_10px_24px_-12px_rgba(255,194,61,.8)] hover:brightness-105;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-[4px] border border-line-strong bg-ink-2/80 px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.08em] text-bone-dim;
+  }
+  .chip-on {
+    @apply border-pulse bg-pulse/15 text-bone;
+  }
+  .input {
+    @apply w-full rounded-md border border-line-strong bg-ink-2 px-4 py-2.5 text-bone outline-none placeholder:text-muted
+      focus:border-pulse focus:ring-2 focus:ring-pulse/20;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Anton ships one weight; never let the browser fake a bold version of it. */
+.font-display {
+  font-synthesis: none;
+}
