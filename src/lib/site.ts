@@ -7,4 +7,4 @@
 export const X_URL = "https://x.com/rerunsol";
 export const X_HANDLE = "@rerunsol";
 
-export const RERUN_CA = "";
+export const RERUN_CA = "7McAfJzBMUhJiayp79f9TZiyQJ5iqbHQdqS82eXQpump";
